@@ -1,0 +1,58 @@
+#include <BluetoothSerial.h>
+#include <ESP32Encoder.h>
+
+BluetoothSerial SerialBT;
+ESP32Encoder encoder;
+
+// Definição dos pinos
+#define ENCODER_CLK_PIN 18
+#define ENCODER_DT_PIN 19
+#define ENCODER_SW_PIN 17
+
+// Variáveis de estado
+long lastPosition  = -999;
+bool buttonPressed = false;
+
+void setup() {
+  Serial.begin(115200);
+  SerialBT.begin("ESP32_Music_Controller"); // Nome do dispositivo Bluetooth
+
+  // Configuração do encoder
+  ESP32Encoder::useInternalWeakPullResistors = puType::up; // Ativa resistores pull-up internos
+  encoder.attachHalfQuad(ENCODER_CLK_PIN, ENCODER_DT_PIN);
+  encoder.clearCount();
+
+  // Configuração do botão
+  pinMode(ENCODER_SW_PIN, INPUT_PULLUP);
+
+  Serial.println("ESP32 Bluetooth Music Controller Iniciado");
+}
+
+void loop() {
+  long newPosition = encoder.getCount();
+  
+  // Detecção de rotação do encoder
+  if (newPosition != lastPosition) {
+    if (newPosition > lastPosition) {
+      SerialBT.println("NEXT_TRACK");  // Envia comando para próxima música
+      Serial.println("Próxima música");
+    } else {
+      SerialBT.println("PREV_TRACK");  // Envia comando para música anterior
+      Serial.println("Música anterior");
+    }
+    lastPosition = newPosition;
+  }
+
+  // Detecção de pressionamento do botão
+  if (digitalRead(ENCODER_SW_PIN) == LOW) {
+    if (!buttonPressed) {
+      SerialBT.println("TOGGLE_PLAY_PAUSE");  // Envia comando para pausar/continuar a música
+      Serial.println("Play/Pause");
+      buttonPressed = true;
+    }
+  } else {
+    buttonPressed = false;
+  }
+
+  delay(50); // Pequeno delay para debouncing
+}
