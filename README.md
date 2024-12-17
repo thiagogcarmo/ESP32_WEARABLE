@@ -36,3 +36,4 @@ Acompanhe as mensagens de conexão diretamente na matriz de LED.
 "Connected to Network1"
 "IP: 192.168.0.101"
 "Wi-Fi: Network1"
+![main_6_](https://github.com/user-attachments/assets/a5ffaa1c-f298-49f6-abc4-dde226aa5a38)
