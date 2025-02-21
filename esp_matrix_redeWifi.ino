@@ -1,3 +1,15 @@
+
+#############################################################################################################
+# Esse modulo de programa visa manter buscar sempre a disponibilidade de internet para o modulo esp32,
+# permitindo cadastrar diversas redes que estiverem ao alcançe do dispositivo.
+# A rotina, que pode ter implementada usando 'interrupts' ou o modulo nativo theadhs para processamento em 
+# parelelo, para não atrapalhar a função principal (verificar essa possibilidade).
+# A rotina é verificar o status da rede, de tempo em tempo (esse tempo está na linha 104), e, em caso de 
+# falha de internet, tentar conectar na proxima rede disponível.
+#
+##############################################################################################################
+
+
 #include <WiFi.h>
 #include <SPI.h>
 #include <Adafruit_GFX.h>
